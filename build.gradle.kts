@@ -27,7 +27,7 @@ dependencies {
     implementation("com.h2database:h2")
     implementation("org.liquibase:liquibase-core")
     implementation("org.springdoc:springdoc-openapi-ui:1.6.6")
-
+    implementation("org.telegram:telegrambots:4.9")
     implementation("org.telegram:telegrambots-spring-boot-starter:5.4.0.1")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("com.ninja-squad:springmockk:3.1.1")
