@@ -1,5 +1,8 @@
 package ru.tinkoff.service
 
+import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
+import org.jsoup.select.Elements
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.telegram.telegrambots.bots.TelegramLongPollingBot
@@ -8,8 +11,9 @@ import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow
 
+
 @Service
-class NewsBotService: TelegramLongPollingBot() {
+class NewsBotService : TelegramLongPollingBot() {
 
     @Value("\${telegram.botName}")
     private val botName: String = ""
@@ -28,14 +32,28 @@ class NewsBotService: TelegramLongPollingBot() {
             val responseText = if (message.hasText()) {
                 val messageText = message.text
                 when {
-                    messageText == "/start" -> "Добро пожаловать!"
-                    messageText.startsWith("Кнопка ") -> "Вы нажали кнопку"
+                    messageText == "/start" -> "Добро пожаловать! \uD83D\uDC4B"
+                    messageText.startsWith("Новости") -> getInfo(
+                        InfoType.NEWS,
+                        "div#wd-_topnews-1.b-widget-data.b-wrapper.b-wrapper-"
+                    )
+                    messageText.startsWith("Погода") -> getInfo(
+                        InfoType.WEATHER,
+                        "div#wd-_weather-1.b-widget-data.b-wrapper.b-wrapper-"
+                    )
+                    messageText.startsWith("Пробки") -> getInfo(
+                        InfoType.TRAFFIC,
+                        "div#wd-_traffic-1.b-widget-data.b-wrapper.b-wrapper-"
+                    )
+                    messageText.startsWith("Магия") -> getInfo(
+                        InfoType.MAGIC, "\uD83E\uDDDA✨"
+                    )
                     else -> "Вы написали: *$messageText*"
                 }
             } else {
                 "Я понимаю только текст"
             }
-            sendNotification(chatId, responseText)
+            sendNotification(chatId, responseText as String)
         }
     }
 
@@ -45,8 +63,8 @@ class NewsBotService: TelegramLongPollingBot() {
         // добавляем 4 кнопки
         responseMessage.replyMarkup = getReplyMarkup(
             listOf(
-                listOf("Кнопка 1", "Кнопка 2"),
-                listOf("Кнопка 3", "Кнопка 4")
+                listOf("Новости", "Погода"),
+                listOf("Пробки", "Магия")
             )
         )
         execute(responseMessage)
@@ -61,4 +79,45 @@ class NewsBotService: TelegramLongPollingBot() {
         }
         return markup
     }
+
+    fun getInfo(infType: InfoType, infoLink: String): String {
+
+        val doc: Document = Jsoup.connect("https://yandex.ru/")
+            .userAgent("Chrome/4.0.249.0 Safari/532.5")
+            .referrer("http://www.google.com")
+            .get()
+
+        val listNews: Elements = doc.select(infoLink)
+
+        var result = when (infType) {
+            InfoType.NEWS -> {
+                "Сейчас в СМИ\n" +
+                        "- ${listNews.select("a").get(3).text()} \n" +
+                        "- ${listNews.select("a").get(4).text()} \n" +
+                        "- ${listNews.select("a").get(5).text()} \n" +
+                        "- ${listNews.select("a").get(6).text()} \n" +
+                        "- ${listNews.select("a").get(7).text()} \n" +
+                        "- ${listNews.select("a").get(8).text()} \n" +
+                        "- ${listNews.select("a").get(9).text()} "
+            }
+            InfoType.WEATHER -> {
+                "Сейчас ${listNews.select("a").get(2).text()} \n${listNews.select("a").get(3).text()} \n${
+                    listNews.select("a").get(4).text()
+                }"
+            }
+            InfoType.TRAFFIC -> {
+                " ${listNews.select("a").get(3).text()} баллов: ${listNews.select("a").get(4).text()}"
+            }
+            InfoType.MAGIC -> {
+                "\uD83E\uDDDA✨" //не робит
+            }
+        }
+
+        return result
+    }
+
+    enum class InfoType {
+        NEWS, WEATHER, TRAFFIC, MAGIC
+    }
 }
+
