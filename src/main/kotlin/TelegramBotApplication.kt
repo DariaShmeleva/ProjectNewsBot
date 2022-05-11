@@ -1,3 +1,0 @@
-class TelegramBotApplication
-
-fun main() {}
