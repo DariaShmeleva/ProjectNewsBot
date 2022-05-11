@@ -1,0 +1,3 @@
+telegram:
+  botName: projectnewsbot
+  token: ${token}
