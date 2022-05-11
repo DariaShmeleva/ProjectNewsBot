@@ -1,1 +1,1 @@
-bot: java NewsBotApplication.kt
+bot: kotlin NewsBotApplication.kt
