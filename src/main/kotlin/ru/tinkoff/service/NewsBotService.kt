@@ -7,7 +7,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow
-import ru.tinkoff.InfoType
+import ru.tinkoff.utils.InfoType
 import ru.tinkoff.utils.getInfo
 
 
@@ -33,16 +33,13 @@ class NewsBotService : TelegramLongPollingBot() {
                 when {
                     messageText == "/start" -> "Добро пожаловать! \uD83D\uDC4B"
                     messageText.startsWith("Новости") -> getInfo(
-                        InfoType.NEWS,
-                        "div#wd-_topnews-1.b-widget-data.b-wrapper.b-wrapper-"
+                        InfoType.NEWS, GET_NEWS
                     )
                     messageText.startsWith("Погода") -> getInfo(
-                        InfoType.WEATHER,
-                        "div#wd-_weather-1.b-widget-data.b-wrapper.b-wrapper-"
+                        InfoType.WEATHER, GET_WEATHER
                     )
                     messageText.startsWith("Пробки") -> getInfo(
-                        InfoType.TRAFFIC,
-                        "div#wd-_traffic-1.b-widget-data.b-wrapper.b-wrapper-"
+                        InfoType.TRAFFIC, GET_TRAFFIC
                     )
                     messageText.startsWith("Магия") -> "\uD83E\uDDDA✨"
                     else -> "Вы написали: *$messageText*"
@@ -75,6 +72,12 @@ class NewsBotService : TelegramLongPollingBot() {
             row
         }
         return markup
+    }
+
+    companion object {
+        private const val GET_NEWS = "div#wd-_topnews-1.b-widget-data.b-wrapper.b-wrapper-"
+        private const val GET_WEATHER = "div#wd-_weather-1.b-widget-data.b-wrapper.b-wrapper-"
+        private const val GET_TRAFFIC = "div#wd-_traffic-1.b-widget-data.b-wrapper.b-wrapper-"
     }
 }
 
