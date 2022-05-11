@@ -48,7 +48,7 @@ class NewsBotService : TelegramLongPollingBot() {
             } else {
                 "Я понимаю только текст"
             }
-            sendNotification(chatId, responseText as String)
+            sendNotification(chatId, responseText)
         }
     }
 
