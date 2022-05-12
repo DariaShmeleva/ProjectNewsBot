@@ -1,1 +1,1 @@
-bot: npm run start
+bot: java -jar build/libs/ProjectNewsBot-0.0.1-SNAPSHOT.jar
