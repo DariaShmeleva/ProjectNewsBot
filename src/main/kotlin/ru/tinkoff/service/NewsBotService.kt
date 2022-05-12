@@ -18,8 +18,8 @@ class NewsBotService : TelegramLongPollingBot() {
     @Value("\${telegram.botName}")
     private val botName: String = ""
 
-    @Value("\${telegram.token}")
-    private val token: String = ""
+
+    private val token: String = System.getenv("token")
 
     override fun getBotUsername(): String = botName
 
