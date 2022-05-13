@@ -22,7 +22,7 @@ class NewsBotService : TelegramLongPollingBot() {
 
     override fun getBotUsername(): String = botName
 
-    override fun getBotToken(): String = token
+    override fun getBotToken(): String = System.getenv("token") ?: token
 
     override fun onUpdateReceived(update: Update) {
         if (update.hasMessage()) {
@@ -47,7 +47,7 @@ class NewsBotService : TelegramLongPollingBot() {
             } else {
                 "Я понимаю только текст"
             }
-            sendNotification(chatId, responseText as String)
+            sendNotification(chatId, responseText)
         }
     }
 
@@ -75,9 +75,9 @@ class NewsBotService : TelegramLongPollingBot() {
     }
 
     companion object {
-        private const val GET_NEWS = "div#wd-_topnews-1.b-widget-data.b-wrapper.b-wrapper-"
-        private const val GET_WEATHER = "div#wd-_weather-1.b-widget-data.b-wrapper.b-wrapper-"
-        private const val GET_TRAFFIC = "div#wd-_traffic-1.b-widget-data.b-wrapper.b-wrapper-"
+        private const val GET_NEWS =    "div#wd-wrapper-_topnews-1"
+        private const val GET_WEATHER = "div#wd-wrapper-_weather-1"
+        private const val GET_TRAFFIC = "div#wd-wrapper-_traffic-1"
     }
 }
 
