@@ -4,6 +4,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
 
+
 fun getInfo(infType: InfoType, infoLink: String): String {
 
     val doc: Document = Jsoup.connect("https://yandex.ru/")
