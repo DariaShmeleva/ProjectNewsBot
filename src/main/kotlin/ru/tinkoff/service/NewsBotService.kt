@@ -8,9 +8,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow
-import ru.tinkoff.utils.InfoType
-import ru.tinkoff.utils.getInfo
-
+import ru.tinkoff.utils.*
 
 @Service
 class NewsBotService : TelegramLongPollingBot() {
@@ -33,13 +31,13 @@ class NewsBotService : TelegramLongPollingBot() {
                 val messageText = message.text
                 when {
                     messageText == "/start" -> "Добро пожаловать! \uD83D\uDC4B"
-                    messageText.startsWith("Новости") -> getInfo(
+                    messageText.startsWith("Новости") -> getInfoByType(
                         InfoType.NEWS, GET_NEWS
                     )
-                    messageText.startsWith("Погода") -> getInfo(
+                    messageText.startsWith("Погода") -> getInfoByType(
                         InfoType.WEATHER, GET_WEATHER
                     )
-                    messageText.startsWith("Пробки") -> getInfo(
+                    messageText.startsWith("Пробки") -> getInfoByType(
                         InfoType.TRAFFIC, GET_TRAFFIC
                     )
                     messageText.startsWith("Магия") -> "\uD83E\uDDDA✨"
@@ -76,7 +74,7 @@ class NewsBotService : TelegramLongPollingBot() {
     }
 
     companion object {
-        private const val GET_NEWS =    "div#wd-wrapper-_topnews-1"
+        private const val GET_NEWS = "div#wd-wrapper-_topnews-1"
         private const val GET_WEATHER = "div#wd-wrapper-_weather-1"
         private const val GET_TRAFFIC = "div#wd-wrapper-_traffic-1"
     }

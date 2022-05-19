@@ -1,40 +1,24 @@
 package ru.tinkoff.utils
 
-import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
+import ru.tinkoff.client.NewsBotClient
 
+fun getInfoByType(infType: InfoType, infoLink: String): String {
 
-fun getInfo(infType: InfoType, infoLink: String): String {
+    val scrapNews = ScrapNews()
+    val scrapWeather = ScrapWeather()
+    val scrapTraffic = ScrapTraffic()
+    val newsBotClient = NewsBotClient()
 
-    val doc: Document = Jsoup.connect("https://yandex.ru/")
-        .userAgent("Chrome/4.0.249.0 Safari/532.5")
-        .referrer("http://www.google.com")
-        .get()
+    val doc: Document = newsBotClient.getConnection()
 
-    val listNews: Elements = doc.select(infoLink)
+    val informationList: Elements = doc.select(infoLink)
 
-    var result = when (infType) {
-        InfoType.NEWS -> {
-            "Сейчас в СМИ:\n" +
-                    "⟡ ${listNews.select("a").get(3).text()}; \n" +
-                    "⟡ ${listNews.select("a").get(4).text()}; \n" +
-                    "⟡ ${listNews.select("a").get(5).text()}; \n" +
-                    "⟡ ${listNews.select("a").get(6).text()}; \n" +
-                    "⟡ ${listNews.select("a").get(7).text()}; \n" +
-                    "⟡ ${listNews.select("a").get(8).text()}; \n" +
-                    "⟡ ${listNews.select("a").get(9).text()}. "
-        }
-        InfoType.WEATHER -> {
-            "Сейчас ${listNews.select("a").get(2).text()}: \n\uD83C\uDF1E ${
-                listNews.select("a").get(3).text()
-            }, \n\uD83C\uDF1A ${
-                listNews.select("a").get(4).text()
-            }"
-        }
-        InfoType.TRAFFIC -> {
-            "\uD83D\uDE98 Загруженность ${listNews.select("a").get(3).text()}: ${listNews.select("a").get(4).text()}"
-        }
+    val result = when (infType) {
+        InfoType.NEWS -> scrapNews.getInfo(informationList)
+        InfoType.WEATHER -> scrapWeather.getInfo(informationList)
+        InfoType.TRAFFIC -> scrapTraffic.getInfo(informationList)
     }
     return result
 }
