@@ -43,7 +43,7 @@ class NewsBotService : TelegramLongPollingBot() {
                     else -> "Вы написали: *$messageText*"
                 }
             } else {
-                "Я понимаю только текст"
+                "Я понимаю только текст :("
             }
             sendNotification(chatId, responseText)
         }

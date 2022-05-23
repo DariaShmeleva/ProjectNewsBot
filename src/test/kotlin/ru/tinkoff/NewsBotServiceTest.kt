@@ -19,14 +19,12 @@ class NewsBotServiceTest {
 
     @Test
     fun shouldProperlySendMessage() {
-        //given
+
         val chatId = 306651848L
         val message = "test"
 
-        //when
         newsBotService.sendNotification(chatId, message)
 
-        //then
         verify(newsBotService).sendNotification(chatId, message)
     }
 }
