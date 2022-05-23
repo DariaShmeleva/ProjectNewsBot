@@ -1,6 +1,5 @@
 package ru.tinkoff.service
 
-
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.telegram.telegrambots.bots.TelegramLongPollingBot
@@ -16,8 +15,8 @@ class NewsBotService : TelegramLongPollingBot() {
     @Value("\${telegram.botName}")
     private val botName: String = ""
 
-
-    private val token: String = System.getenv("token")
+    @Value("\${telegram.token}")
+    private val token: String = ""
 
     override fun getBotUsername(): String = botName
 
